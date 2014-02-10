@@ -49,6 +49,7 @@ public class UpdaterService extends Service {
 			this.updater = null;
 			this.yamba.setServiceRunning(false);
 			Log.d(TAG, "onDestroyed");
+			Log.d(TAG, "test");
 	}
 	
 	private class Updater extends Thread { 
