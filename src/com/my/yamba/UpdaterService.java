@@ -54,7 +54,6 @@ public class UpdaterService extends Service {
 			this.updater = null;
 			this.yamba.setServiceRunning(false);
 			Log.d(TAG, "onDestroyed");
-			Log.d(TAG, "test");
 	}
 	
 	private class Updater extends Thread { 
@@ -82,12 +81,11 @@ public class UpdaterService extends Service {
 							values.clear(); 
 							values.put(DbHelper.C_ID, status.id);
 							values.put(DbHelper.C_CREATED_AT, status.createdAt.getTime());
-							//values.put(DbHelper.C_SOURCE, status.source);
 							values.put(DbHelper.C_TEXT, status.text);
 							values.put(DbHelper.C_USER, status.user.name);
-							Log.d(TAG, String.format("%s: %s", status.user.name, status.text));
+							Log.d(TAG, String.format("%s: %s: %s", status.user.name, status.text, status.createdAt.getTime()));
 							try{
-							db.insertOrThrow(DbHelper.TABLE, null, values);						
+								db.insertOrThrow(DbHelper.TABLE, null, values);						
 							}
 							catch (SQLException e){
 							}
