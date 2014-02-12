@@ -96,7 +96,7 @@ public class StatusActivity extends Activity  implements OnClickListener,TextWat
 	
 	@Override
 	public void afterTextChanged(Editable arg0) {
-		int count = 140 - arg0.length(); //
+		int count = 140 - arg0.length(); 
 		textCount.setText(Integer.toString(count));
 		if (count < 10)
 			textCount.setTextColor(Color.GREEN);

@@ -6,7 +6,10 @@ import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
 
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -16,10 +19,11 @@ public class UpdaterService extends Service {
 	private boolean runFlag = false;
 	private Updater updater;
 	private YambaApplication yamba;
+	DbHelper dbHelper;
+	SQLiteDatabase db;
 
 	@Override
 	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -28,6 +32,7 @@ public class UpdaterService extends Service {
 		super.onCreate();
 		this.yamba = (YambaApplication) getApplication();
 		this.updater = new Updater();
+		this.dbHelper = new DbHelper(this, null, null, 0);
 		Log.d(TAG, "onCreated");
 	}
 	
@@ -45,7 +50,7 @@ public class UpdaterService extends Service {
 		public void onDestroy() { 
 			super.onDestroy();
 			this.runFlag = false;
-			this.updater.interrupt(); //
+			this.updater.interrupt(); 
 			this.updater = null;
 			this.yamba.setServiceRunning(false);
 			Log.d(TAG, "onDestroyed");
@@ -62,21 +67,35 @@ public class UpdaterService extends Service {
 		@Override
 		public void run() { 
 			UpdaterService updaterService = UpdaterService.this; 
-			int count = 0;
 			while (updaterService.runFlag) { 
 				Log.d(TAG, "Updater running");
 				try {
 					try {
-						timeline = yamba.getTwitter().getFriendsTimeline(); //
+						timeline = yamba.getTwitter().getFriendsTimeline(); 
 						} catch (TwitterException e) {
 							Log.e(TAG, "Failed to connect to twitter service", e);
 							}
-						for (Twitter.Status status : timeline) { //
+					
+						db = dbHelper.getWritableDatabase();
+						ContentValues values = new ContentValues();
+						for (Twitter.Status status : timeline) { 
+							values.clear(); 
+							values.put(DbHelper.C_ID, status.id);
+							values.put(DbHelper.C_CREATED_AT, status.createdAt.getTime());
+							//values.put(DbHelper.C_SOURCE, status.source);
+							values.put(DbHelper.C_TEXT, status.text);
+							values.put(DbHelper.C_USER, status.user.name);
 							Log.d(TAG, String.format("%s: %s", status.user.name, status.text));
-							count++;
-							}				
-						Log.d(TAG, String.format("%s",count));
-						Log.d(TAG, "Updater ran");
+							try{
+							db.insertOrThrow(DbHelper.TABLE, null, values);						
+							}
+							catch (SQLException e){
+							}
+						}
+								
+						
+						db.close();
+						Log.d(TAG, "Updater ran");					
 						Thread.sleep(DELAY); 
 						} catch (InterruptedException e) { 
 					updaterService.runFlag = false;

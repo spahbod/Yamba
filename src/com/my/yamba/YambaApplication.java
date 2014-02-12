@@ -34,12 +34,12 @@ public class YambaApplication extends Application implements OnSharedPreferenceC
 	}
 	
 	@Override
-		public void onTerminate() { //
+		public void onTerminate() { 
 		super.onTerminate();
 		Log.i(TAG, "onTerminated");
 	}
 	
-	public synchronized Twitter getTwitter() { //
+	public synchronized Twitter getTwitter() { 
 		if (this.twitter == null) {
 			String username = this.prefs.getString("username", "");
 			String password = this.prefs.getString("password", "");
