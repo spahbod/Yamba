@@ -58,7 +58,7 @@ public class UpdaterService extends Service {
 			while (updaterService.runFlag) {
 				Log.d(TAG, "Running background thread");
 				try {
-					YambaApplication yamba = (YambaApplication) updaterService.getApplication();
+					yamba = (YambaApplication) updaterService.getApplication();
 					int newUpdates = yamba.fetchStatusUpdates(); 
 					if (newUpdates > 0) { 
 						Log.d(TAG, "We have a new status");

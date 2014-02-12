@@ -37,7 +37,7 @@ public class YambaApplication extends Application implements OnSharedPreferenceC
 
 	
 	@Override
-	public void onCreate() { //
+	public void onCreate() { 
 		super.onCreate();
 		this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		this.prefs.registerOnSharedPreferenceChangeListener(this);

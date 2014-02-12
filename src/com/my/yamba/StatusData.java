@@ -61,8 +61,7 @@ public class StatusData {
 			Log.d(TAG, "insertOrIgnore on " + values);
 			SQLiteDatabase db = this.dbHelper.getWritableDatabase(); 
 			try {
-				db.insertWithOnConflict(TABLE, null, values,
-				SQLiteDatabase.CONFLICT_IGNORE); 
+				db.insertWithOnConflict(TABLE, null, values,SQLiteDatabase.CONFLICT_IGNORE); 
 			} finally {
 				db.close(); 
 			}
