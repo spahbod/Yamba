@@ -27,6 +27,7 @@ public class StatusActivity extends Activity  implements OnClickListener,TextWat
 	private static final String TAG="StatusActivity";
 	private EditText editText;
 	private Button updateButton;
+	private Button timeButton;
 	private TextView textCount;
 
 
@@ -38,6 +39,9 @@ public class StatusActivity extends Activity  implements OnClickListener,TextWat
 		editText =(EditText)findViewById(R.id.editText);
 		updateButton =(Button)findViewById(R.id.buttonUpdate);
 		updateButton.setOnClickListener(this);
+		
+		timeButton = (Button)findViewById(R.id.time);
+		timeButton.setOnClickListener(this);
 		
 		textCount = (TextView)findViewById(R.id.textCount); 
 		textCount.setText(Integer.toString(140)); //
@@ -65,9 +69,20 @@ public class StatusActivity extends Activity  implements OnClickListener,TextWat
 		}
 				
 	public void onClick(View v){
+		Button click = (Button)v;
+		int clickId = click.getId();
+		
+		int timeButtonId = this.timeButton.getId();
+		
+		if(timeButtonId == clickId ){
+			startActivity(new Intent(this, TimelineActivity.class)); 
+			
+		}else{
+		
 		  String status = editText.getText().toString();
 		    new PostToTwitter().execute(status);
 		    Log.d(TAG, "onClicked");
+		}
 	}
 	
 	@Override

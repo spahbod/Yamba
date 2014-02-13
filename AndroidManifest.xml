@@ -18,13 +18,14 @@
           <activity 
               android:name=".PrefsActivity"
 			 android:label="@string/titlePrefs" />
-        <activity
+       	      <activity 
+              android:name=".TimelineActivity"
+			 android:label="@string/app_name" />
+          
+          <activity
             android:name="com.my.yamba.StatusActivity"
             android:label="@string/app_name" >
-            
-         
-            
-          
+                        
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
