@@ -26,12 +26,13 @@ public final class R {
     }
     public static final class id {
         public static final int buttonUpdate=0x7f090002;
+        public static final int count=0x7f090004;
         public static final int editText=0x7f090003;
-        public static final int itemPrefs=0x7f090005;
-        public static final int itemServiceStart=0x7f090006;
-        public static final int itemServiceStop=0x7f090007;
+        public static final int itemPrefs=0x7f090006;
+        public static final int itemServiceStart=0x7f090007;
+        public static final int itemServiceStop=0x7f090008;
         public static final int textCount=0x7f090000;
-        public static final int textTimeline=0x7f090004;
+        public static final int textTimeline=0x7f090005;
         public static final int time=0x7f090001;
     }
     public static final class layout {

@@ -77,7 +77,7 @@ public class YambaApplication extends Application implements OnSharedPreferenceC
 			return 0;
 			}
 			try {
-				List<Status> statusUpdates = twitter.getFriendsTimeline();
+				List<Status> statusUpdates = twitter.getHomeTimeline();
 				long latestStatusCreatedAtTime = this.getStatusData().getLatestStatusCreatedAtTime();
 				int count = 0;
 				ContentValues values = new ContentValues();
@@ -91,6 +91,7 @@ public class YambaApplication extends Application implements OnSharedPreferenceC
 					this.getStatusData().insertOrIgnore(values);
 					if (latestStatusCreatedAtTime < createdAt) {
 						count++;
+						Log.d(TAG, "timestamp" +createdAt);
 					}
 			}
 				

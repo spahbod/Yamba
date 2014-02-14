@@ -1,5 +1,6 @@
 package com.my.yamba;
 
+
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
 
@@ -29,6 +30,8 @@ public class StatusActivity extends Activity  implements OnClickListener,TextWat
 	private Button updateButton;
 	private Button timeButton;
 	private TextView textCount;
+	private boolean serviceFlagStart = false; 
+	private boolean countFlag = true;
 
 
 	@Override
@@ -44,13 +47,17 @@ public class StatusActivity extends Activity  implements OnClickListener,TextWat
 		timeButton.setOnClickListener(this);
 		
 		textCount = (TextView)findViewById(R.id.textCount); 
-		textCount.setText(Integer.toString(140)); //
+		textCount.setText(Integer.toString(140)); 
 		textCount.setTextColor(Color.BLACK); 
 		editText.addTextChangedListener(this);
-
 		
-		
-		 Log.d(TAG, "START");
+	
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		editText.setText("");		
 	}
 		
 		class PostToTwitter extends AsyncTask<String, Integer, String>{
@@ -78,10 +85,12 @@ public class StatusActivity extends Activity  implements OnClickListener,TextWat
 			startActivity(new Intent(this, TimelineActivity.class)); 
 			
 		}else{
-		
-		  String status = editText.getText().toString();
+			if(this.countFlag){		
+			String status = editText.getText().toString();
 		    new PostToTwitter().execute(status);
+		    editText.setText("");
 		    Log.d(TAG, "onClicked");
+			}
 		}
 	}
 	
@@ -96,10 +105,14 @@ public class StatusActivity extends Activity  implements OnClickListener,TextWat
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) { 
 		case R.id.itemServiceStart:
-			startService(new Intent(this, UpdaterService.class)); 
+			if(!this.serviceFlagStart){
+				startService(new Intent(this, UpdaterService.class));
+				this.serviceFlagStart = true;
+			}
 			break;
 		case R.id.itemServiceStop:
 			stopService(new Intent(this, UpdaterService.class)); 
+			this.serviceFlagStart = false;
 			break;	
 		case R.id.itemPrefs:
 			startActivity(new Intent(this, PrefsActivity.class)); 
@@ -113,10 +126,19 @@ public class StatusActivity extends Activity  implements OnClickListener,TextWat
 	public void afterTextChanged(Editable arg0) {
 		int count = 140 - arg0.length(); 
 		textCount.setText(Integer.toString(count));
-		if (count < 10)
+		
+		if (count < 140){
+			textCount.setTextColor(Color.BLACK); 
+			this.countFlag = true;
+		}
+		if (count < 10){
 			textCount.setTextColor(Color.GREEN);
-		if (count < 0)
+			this.countFlag = true;
+		}
+		if (count < 0){
 			textCount.setTextColor(Color.YELLOW);
+			this.countFlag = false;
+			}
 
 	}
 
@@ -128,10 +150,11 @@ public class StatusActivity extends Activity  implements OnClickListener,TextWat
 	}
 
 	@Override
-	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		// TODO Auto-generated method stub
 		
 	}
+
 		
 }
 
