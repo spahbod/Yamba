@@ -1,56 +1,44 @@
 package com.my.yamba;
 
-
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.text.format.DateUtils;
-import android.widget.TextView;
+import android.widget.ListView;
+
 
 public class TimelineActivity extends Activity {
 	DbHelper dbHelper;
 	SQLiteDatabase db;
-	Cursor cursor;
-	TextView textTimeline;
-	private TextView Count;
-	int timeCount;
+	Cursor cursor; 
+	ListView listTimeline; 
+	TimelineAdapter adapter; 
+	static final String[] FROM = { DbHelper.C_CREATED_AT, DbHelper.C_USER,DbHelper.C_TEXT }; 
+	static final int[] TO = { R.id.textCreatedAt, R.id.textUser, R.id.textText }; 
 	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.timeline_basic);
-		
-		textTimeline = (TextView) findViewById(R.id.textTimeline);
-		Count = (TextView)findViewById(R.id.count); 
-		Count.setText(Integer.toString(000)); 
-		
-		dbHelper = new DbHelper(this); 
-		db = dbHelper.getReadableDatabase(); 
-	}
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		this.cursor.close();
-		db.close();
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		
-		cursor = db.query(DbHelper.TABLE, null, null, null, null, null,DbHelper.C_CREATED_AT + " DESC"); 
-		//startManagingCursor(cursor); 
-		String user, text, output;
-			while (cursor.moveToNext()) { 
-				user = cursor.getString(cursor.getColumnIndex(DbHelper.C_USER)); 
-				text = cursor.getString(cursor.getColumnIndex(DbHelper.C_TEXT));
-				long data =  cursor.getLong(cursor.getColumnIndex(DbHelper.C_CREATED_AT));
-				output = String.format("%s: %s: %s\n", user,text, DateUtils.getRelativeTimeSpanString(data)); 
-				textTimeline.append(output); 
-				timeCount++;
-			}
-			Count.setText(Integer.toString(timeCount)); 	
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.timeline_basic);
+	listTimeline = (ListView) findViewById(R.id.listTimeline);
+	dbHelper = new DbHelper(this);
+	db = dbHelper.getReadableDatabase();
 	}
 
+@Override
+public void onDestroy() {
+	super.onDestroy();
+	cursor.close();
+	db.close();
+	}
+
+@Override
+protected void onResume() {
+	super.onResume();
+	cursor = db.query(DbHelper.TABLE, null, null, null, null, null,DbHelper.C_CREATED_AT + " DESC");
+	
+	adapter = new TimelineAdapter(this, cursor); 
+	listTimeline.setAdapter(adapter);
+
+	}
 }
